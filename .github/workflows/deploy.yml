@@ -16,7 +16,7 @@ jobs:
       - run: npm ci
       - run: npm run build --if-present
       - run: cp -r public .next/standalone/public
-      - run: cp -r .next/static .next/standalone/static
+      - run: cp -r .next/static .next/standalone/.next/static
       - run: mv .next/standalone/server.js .next/standalone/app.js
       - uses: actions/upload-artifact@v4
         with:
