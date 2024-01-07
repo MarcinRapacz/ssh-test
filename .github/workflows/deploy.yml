@@ -36,7 +36,7 @@ jobs:
           name: nextjs-standalone
           path: .next/standalone
 
-      - name: copy file via ssh password
+      - name: Copy file to a server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -44,5 +44,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           source: ".next/standalone/*"
-          target: ${{ secrets.SSH_DIR_PATH }}
+          target: ~/domains/${{ secrets.SSH_DOMAIN_NAME }}/public_nodejs/
           strip_components: 2
