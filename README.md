@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Oto kroki, które możesz podjąć, aby skonfigurować klucz SSH i połączyć się z serwerem za pomocą GitHub Actions:
 
-## Getting Started
+1. **Generowanie klucza SSH:**
 
-First, run the development server:
+   - Lokalnie w terminalu wykonaj polecenie:
+     ```bash
+     ssh-keygen -t rsa -b 4096 -f ~/.ssh/github_actions_key -C "your_email@example.com"
+     ```
+   - Zostaniesz poproszony o podanie hasła. Możesz zostawić je puste, ale zaleca się dodanie hasła dla dodatkowej warstwy zabezpieczeń.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+2. **Dodanie klucza publicznego do serwera:**
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+   - Skopiuj klucz publiczny na serwer za pomocą polecenia:
+     ```bash
+     ssh-copy-id -i ~/.ssh/github_actions_key user@your_server_ip
+     ```
+   - Wprowadź hasło użytkownika na serwerze.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Dodanie klucza prywatnego do tajemnic w GitHub Actions:**
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   - Skopiuj zawartość klucza prywatnego do schowka.
+   - W repozytorium na GitHub przejdź do ustawień (Settings) > Secrets > New repository secret.
+   - Utwórz nową tajemnicę, np. o nazwie `SSH_PRIVATE_KEY`, i wklej klucz prywatny jako wartość.
 
-## Learn More
+4. **Przygotowanie pliku konfiguracyjnego GitHub Actions:**
 
-To learn more about Next.js, take a look at the following resources:
+   - Dodaj plik `.github/workflows/deploy.yml` z następującą zawartością:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+     ```yaml
+     name: Deploy to Server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+     on:
+       push:
+         branches:
+           - main
 
-## Deploy on Vercel
+     jobs:
+       deploy:
+         runs-on: ubuntu-latest
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+         steps:
+           - name: Checkout repository
+             uses: actions/checkout@v2
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+           - name: Set up SSH
+             uses: webfactory/ssh-agent@v0.5.4
+             with:
+               ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+           - name: Deploy to Server
+             run: |
+               # Tutaj możesz umieścić polecenia do kopiowania plików, uruchamiania skryptów itp.
+               scp -r ./your_directory user@your_server_ip:/path/to/destination
+             # Dodaj kolejne polecenia, jeśli potrzebujesz więcej działań.
+     ```
+
+5. **Zmienne środowiskowe w pliku konfiguracyjnym:**
+
+   - Jeśli potrzebujesz przekazać dodatkowe informacje, takie jak ścieżki, zmienne środowiskowe itp., możesz je ustawić jako zmienną środowiskową w pliku konfiguracyjnym GitHub Actions.
+
+6. **Uruchomienie workflow:**
+   - Po zatwierdzeniu pliku `.github/workflows/deploy.yml` i wrzuceniu go na główną gałąź repozytorium, GitHub Actions powinien uruchomić workflow automatycznie po każdym `push` do gałęzi `main`.
+
+Upewnij się, że dostosowujesz ścieżki, nazwy użytkowników, adresy IP i nazwy kluczy do swojego konkretnego przypadku. Pamiętaj, aby dokładnie przetestować konfigurację na serwerze testowym przed wdrożeniem na serwer produkcyjny.
