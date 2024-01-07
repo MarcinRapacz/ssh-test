@@ -40,5 +40,6 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          source: ".next/standalone/**"
+          source: ".next/standalone/*"
           target: ${{ secrets.SSH_DIR_PATH }}
+          strip_components: 2
