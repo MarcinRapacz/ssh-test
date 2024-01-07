@@ -29,6 +29,9 @@ jobs:
 
       - name: Download Next.js artifact
         uses: actions/download-artifact@v4
+        with:
+          name: nextjs-standalone
+          path: .next/standalone
 
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
