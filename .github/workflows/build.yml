@@ -1,4 +1,4 @@
-name: Build and Save Next.js Artifact
+name: Build Next JS aplication
 
 on:
   push:
@@ -17,5 +17,5 @@ jobs:
       - run: npm run build --if-present
       - uses: actions/upload-artifact@v4
         with:
-          name: nextjs-build
+          name: nextjs-standalone
           path: .next/standalone
