@@ -33,6 +33,13 @@ jobs:
           name: nextjs-standalone
           path: .next/standalone
 
+      - name: Copy files to artifact
+        run: |
+          cp -r public .next/standalone/public
+          cp -r .next/static .next/standalone/static
+          ln -s app.js server.js
+        shell: bash
+
       - name: copy file via ssh password
         uses: appleboy/scp-action@v0.1.7
         with:
