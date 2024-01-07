@@ -26,12 +26,16 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Download Next.js artifact
         uses: actions/download-artifact@v4
 
-      - name: Upload to Server
-        run: scp -r .next/standalone ${{ secrets.SSH_LOGIN }}:${{ secrets.SSH_DIR_PATH }}
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          source: ".next/standalone"
+          target: ${{ secrets.SSH_DIR_PATH }}
