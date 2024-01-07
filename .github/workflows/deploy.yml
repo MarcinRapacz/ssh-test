@@ -15,7 +15,7 @@ jobs:
           cache: "npm"
       - run: npm ci
       - run: npm run build --if-present
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: nextjs-standalone
           path: .next/standalone
@@ -31,9 +31,7 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Download Next.js artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: nextjs-standalone
+        uses: actions/download-artifact@v4
 
       - name: Upload to Server
         run: scp -r .next/standalone ${{ secrets.SSH_LOGIN }}:${{ secrets.SSH_DIR_PATH }}
