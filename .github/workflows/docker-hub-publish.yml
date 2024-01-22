@@ -40,7 +40,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            docker pull ${{ env.DOCKER_METADATA_OUTPUT_VERSION }} &&
+            docker pull ${{ secrets.DOCKER_IMAGE }}:${{ env.DOCKER_METADATA_OUTPUT_VERSION }} &&
             docker stop ${{secrets.DOCKER_CONTAINER_NAME}} &&
             docker container rm ${{secrets.DOCKER_CONTAINER_NAME}} &&
-            docker run -p ${{secrets.DOCKER_HOST_PORT}}:3000 -d --restart always --name ${{secrets.DOCKER_CONTAINER_NAME}} ${{ env.DOCKER_METADATA_OUTPUT_VERSION }};
+            docker run -p ${{secrets.DOCKER_HOST_PORT}}:3000 -d --restart always --name ${{secrets.DOCKER_CONTAINER_NAME}} ${{ secrets.DOCKER_IMAGE }}:${{ env.DOCKER_METADATA_OUTPUT_VERSION }};
