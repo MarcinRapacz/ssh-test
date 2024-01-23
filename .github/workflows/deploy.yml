@@ -13,15 +13,16 @@ jobs:
         with:
           node-version: 18
           cache: "npm"
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: cp -r public .next/standalone/public
-      - run: cp -r .next/static .next/standalone/.next/static
-      - run: mv .next/standalone/server.js .next/standalone/app.js
-      - uses: actions/upload-artifact@v4
-        with:
-          name: nextjs-standalone
-          path: .next/standalone
+      - run: node -v
+      # - run: npm ci
+      # - run: npm run build --if-present
+      # - run: cp -r public .next/standalone/public
+      # - run: cp -r .next/static .next/standalone/.next/static
+      # - run: mv .next/standalone/server.js .next/standalone/app.js
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: nextjs-standalone
+      #     path: .next/standalone
 #   deploy:
 #     runs-on: ubuntu-latest
 #     needs: build
